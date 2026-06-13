@@ -1,0 +1,12 @@
+{
+  "project": "sample-agent-tool",
+  "audience": "agent builders",
+  "desiredOutcome": "try the project locally",
+  "confidence": 100,
+  "demoCommands": [
+    {
+      "label": "smoke",
+      "command": "npm run smoke"
+    }
+  ]
+}
