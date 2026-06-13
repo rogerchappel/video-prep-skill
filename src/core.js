@@ -17,6 +17,7 @@ export function buildVideoBrief(repoPath, options = {}) {
     project: facts.name,
     audience,
     desiredOutcome: outcome,
+    confidence: estimateConfidence(facts, commands),
     summary: summarizeProject(facts),
     hooks: buildHooks(facts, audience),
     demoCommands: commands,
@@ -133,6 +134,16 @@ function buildRisks(facts, commands) {
   if (!commands.length) risks.push("No package scripts were found, so demo commands may need manual selection.");
   if (!facts.hasTests) risks.push("No clear test signal was found; avoid implying tested behavior.");
   return risks;
+}
+
+function estimateConfidence(facts, commands) {
+  let score = 40;
+  if (facts.description && facts.description !== "No description found.") score += 15;
+  if (facts.docs.length) score += 15;
+  if (facts.hasSkill) score += 15;
+  if (commands.length) score += 10;
+  if (facts.hasTests) score += 5;
+  return Math.min(score, 100);
 }
 
 function buildNarration(facts, proofPoints, commands, audience, outcome) {

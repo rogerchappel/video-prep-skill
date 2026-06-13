@@ -18,6 +18,7 @@ test("builds a grounded brief", () => {
   assert.ok(brief.hooks.some((hook) => hook.includes("sample-agent-tool")));
   assert.ok(brief.demoCommands.some((command) => command.command === "npm run smoke"));
   assert.ok(brief.evidence.some((item) => item.includes("SKILL.md")));
+  assert.equal(brief.confidence, 100);
 });
 
 test("renders text and json formats", () => {
