@@ -19,6 +19,7 @@ node bin/video-prep-skill.js /path/to/repo --audience "agent builders" --outcome
 ## What It Produces
 
 - a positioning summary grounded in README and package metadata
+- a confidence score based on available local evidence
 - hook options for short video openings
 - scene outline with proof points and demo beats
 - likely smoke, test, and build commands
