@@ -1,0 +1,31 @@
+{
+  "name": "video-prep-skill",
+  "version": "0.1.0",
+  "description": "Local-first agent skill for turning a repository into a grounded video preparation brief.",
+  "type": "module",
+  "bin": {
+    "video-prep-skill": "./bin/video-prep-skill.js"
+  },
+  "scripts": {
+    "check": "node --check src/core.js && node --check bin/video-prep-skill.js",
+    "test": "node --test",
+    "smoke": "node bin/video-prep-skill.js fixtures/sample-repo --format text"
+  },
+  "keywords": [
+    "agent-skill",
+    "video",
+    "repo-analysis",
+    "content"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "bin",
+    "docs",
+    "src",
+    "SKILL.md",
+    "README.md"
+  ]
+}
