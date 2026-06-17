@@ -9,7 +9,9 @@
   "scripts": {
     "check": "node --check src/core.js && node --check bin/video-prep-skill.js",
     "test": "node --test",
-    "smoke": "node bin/video-prep-skill.js fixtures/sample-repo --format text"
+    "smoke": "node bin/video-prep-skill.js fixtures/sample-repo --format text",
+    "package:smoke": "npm pack --dry-run",
+    "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "agent-skill",
@@ -18,6 +20,10 @@
     "content"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/video-prep-skill.git"
+  },
   "engines": {
     "node": ">=20"
   },
