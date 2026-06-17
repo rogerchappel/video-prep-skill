@@ -42,4 +42,9 @@ The CLI only reads local files. It does not call external services, mutate the t
 npm run check
 npm test
 npm run smoke
+npm run package:smoke
+npm run release:check
 ```
+
+Use `npm run package:smoke` to inspect the npm tarball contents before publishing.
+Use `npm run release:check` before opening a release PR.
