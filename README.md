@@ -46,5 +46,7 @@ npm run package:smoke
 npm run release:check
 ```
 
-Use `npm run package:smoke` to inspect the npm tarball contents before publishing.
+Use `npm run package:smoke` to assert the npm tarball contains the CLI,
+library, docs, skill instructions, support files, and sample brief before
+publishing.
 Use `npm run release:check` before opening a release PR.
