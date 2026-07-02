@@ -10,7 +10,7 @@
     "check": "node --check src/core.js && node --check bin/video-prep-skill.js",
     "test": "node --test",
     "smoke": "node bin/video-prep-skill.js fixtures/sample-repo --format text",
-    "package:smoke": "npm pack --dry-run",
+    "package:smoke": "node scripts/package-smoke.js",
     "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
@@ -34,7 +34,9 @@
   "files": [
     "bin",
     "docs",
+    "examples",
     "src",
+    "scripts/package-smoke.js",
     "SKILL.md",
     "README.md",
     "LICENSE",
