@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- Reject missing option values and unknown CLI options with concise usage
+  diagnostics instead of silently falling back or printing a stack trace.
 - Include the sample brief examples in the npm package allowlist.
 - Replace raw package dry-run output with an assertion-backed package smoke
   check for the CLI, library, docs, skill instructions, support files, and

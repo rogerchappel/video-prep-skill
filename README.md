@@ -16,6 +16,11 @@ Run against another repository:
 node bin/video-prep-skill.js /path/to/repo --audience "agent builders" --outcome "try the CLI locally"
 ```
 
+Every option requires the value shown in the usage text. Missing values,
+unsupported formats, and unknown options exit with status 1 and print a
+concise `video-prep-skill:` error followed by usage; they do not emit a stack
+trace. Run `video-prep-skill --help` to print usage and exit successfully.
+
 ## What It Produces
 
 - a positioning summary grounded in README and package metadata
