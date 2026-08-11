@@ -40,16 +40,21 @@ export function inspectRepo(root) {
   const packageJson = readJson(path.join(root, "package.json"));
   const readme = readFirstExisting(root, ["README.md", "readme.md", "Readme.md"]);
   const docs = listFiles(path.join(root, "docs")).filter((file) => file.endsWith(".md"));
-  const scripts = packageJson?.scripts || {};
+  const scripts = isPlainObject(packageJson?.scripts) ? packageJson.scripts : {};
+  const packageName = nonEmptyString(packageJson?.name);
+  const packageDescription = nonEmptyString(packageJson?.description);
+  const packageKeywords = Array.isArray(packageJson?.keywords)
+    ? packageJson.keywords.filter((keyword) => typeof keyword === "string")
+    : [];
 
   return {
     root,
-    name: packageJson?.name || path.basename(root),
-    description: packageJson?.description || firstMeaningfulLine(readme) || "No description found.",
+    name: packageName || path.basename(root),
+    description: packageDescription || firstMeaningfulLine(readme) || "No description found.",
     readme: readme.slice(0, MAX_README_CHARS),
     docs: docs.map((file) => path.relative(root, file)),
     scripts,
-    packageKeywords: packageJson?.keywords || [],
+    packageKeywords,
     hasSkill: fs.existsSync(path.join(root, "SKILL.md")),
     hasTests: Object.keys(scripts).some((name) => name.includes("test")) || listFiles(root).some((file) => file.includes("test"))
   };
@@ -157,6 +162,16 @@ function readJson(file) {
   } catch {
     return null;
   }
+}
+
+function nonEmptyString(value) {
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function isPlainObject(value) {
+  if (value === null || typeof value !== "object") return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
 }
 
 function readFirstExisting(root, names) {

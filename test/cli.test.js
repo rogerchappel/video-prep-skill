@@ -1,6 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 
 const cli = "bin/video-prep-skill.js";
 const fixture = "fixtures/sample-repo";
@@ -76,4 +79,28 @@ test("renders representative text and JSON commands", () => {
   assert.equal(jsonResult.status, 0);
   assert.equal(JSON.parse(jsonResult.stdout).project, "sample-agent-tool");
   assert.equal(jsonResult.stderr, "");
+});
+
+test("renders a grounded brief when package metadata has malformed field types", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "video-prep-cli-"));
+  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
+    name: { invalid: true },
+    description: ["invalid"],
+    keywords: "video",
+    scripts: null
+  }));
+  fs.writeFileSync(path.join(root, "README.md"), "# Readable repository\n\nRepository details.\n");
+
+  try {
+    const result = runCli([root, "--format", "json"]);
+    assert.equal(result.status, 0);
+    assert.equal(result.stderr, "");
+    const brief = JSON.parse(result.stdout);
+    assert.equal(brief.project, path.basename(root));
+    assert.equal(brief.summary, `${path.basename(root)}: Readable repository`);
+    assert.deepEqual(brief.demoCommands, []);
+    assert.doesNotMatch(result.stdout, /\[object Object\]/);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });

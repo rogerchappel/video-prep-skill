@@ -21,6 +21,12 @@ unsupported formats, and unknown options exit with status 1 and print a
 concise `video-prep-skill:` error followed by usage; they do not emit a stack
 trace. Run `video-prep-skill --help` to print usage and exit successfully.
 
+Package metadata is treated as optional evidence. The scanner uses `name` and
+`description` only when they are non-empty strings, `keywords` only when it is
+an array (discarding non-string entries), and `scripts` only when it is an
+object map. Malformed values fall back to the repository directory name,
+README heading, or empty metadata defaults instead of stopping the CLI.
+
 ## What It Produces
 
 - a positioning summary grounded in README and package metadata
