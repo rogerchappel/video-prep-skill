@@ -24,8 +24,10 @@ trace. Run `video-prep-skill --help` to print usage and exit successfully.
 Package metadata is treated as optional evidence. The scanner uses `name` and
 `description` only when they are non-empty strings, `keywords` only when it is
 an array (discarding non-string entries), and `scripts` only when it is an
-object map. Malformed values fall back to the repository directory name,
-README heading, or empty metadata defaults instead of stopping the CLI.
+object map containing non-empty string commands. Boolean, numeric, array,
+object, null, and whitespace-only script values are ignored. Malformed values
+fall back to the repository directory name, README heading, or empty metadata
+defaults instead of stopping the CLI.
 
 ## What It Produces
 
@@ -33,7 +35,7 @@ README heading, or empty metadata defaults instead of stopping the CLI.
 - a confidence score based on available local evidence
 - hook options for short video openings
 - scene outline with proof points and demo beats
-- likely smoke, test, and build commands
+- likely smoke, test, check, and build commands backed by valid package scripts
 - risk notes and side-effect boundaries
 - narration draft suitable for a first editing pass
 
