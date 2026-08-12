@@ -40,7 +40,7 @@ export function inspectRepo(root) {
   const packageJson = readJson(path.join(root, "package.json"));
   const readme = readFirstExisting(root, ["README.md", "readme.md", "Readme.md"]);
   const docs = listFiles(path.join(root, "docs")).filter((file) => file.endsWith(".md"));
-  const scripts = isPlainObject(packageJson?.scripts) ? packageJson.scripts : {};
+  const scripts = normalizeScripts(packageJson?.scripts);
   const packageName = nonEmptyString(packageJson?.name);
   const packageDescription = nonEmptyString(packageJson?.description);
   const packageKeywords = Array.isArray(packageJson?.keywords)
@@ -166,6 +166,13 @@ function readJson(file) {
 
 function nonEmptyString(value) {
   return typeof value === "string" && value.trim() ? value : null;
+}
+
+function normalizeScripts(value) {
+  if (!isPlainObject(value)) return {};
+  return Object.fromEntries(
+    Object.entries(value).filter(([, command]) => nonEmptyString(command))
+  );
 }
 
 function isPlainObject(value) {

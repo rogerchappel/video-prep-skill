@@ -104,3 +104,16 @@ test("renders a grounded brief when package metadata has malformed field types",
     fs.rmSync(root, { recursive: true, force: true });
   }
 });
+
+test("omits malformed script values from CLI output", () => {
+  const result = runCli(["fixtures/malformed-scripts-repo", "--format", "json"]);
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  const brief = JSON.parse(result.stdout);
+  assert.deepEqual(brief.demoCommands, [
+    { label: "test", command: "npm run test" },
+    { label: "build", command: "npm run build" }
+  ]);
+  assert.doesNotMatch(result.stdout, /npm run (smoke|check)/);
+});
