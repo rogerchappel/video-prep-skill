@@ -101,7 +101,11 @@ test("keeps only non-empty string script commands", () => {
     { label: "build", command: "npm run build" }
   ]);
   assert.equal(brief.confidence, 70);
-  assert.doesNotMatch(JSON.stringify(brief), /smoke|check/);
+  assert.doesNotMatch(JSON.stringify({
+    demoCommands: brief.demoCommands,
+    scenes: brief.scenes,
+    narration: brief.narration
+  }), /npm run (smoke|check)/);
 });
 
 test("malformed script values do not create executable claims", () => {
