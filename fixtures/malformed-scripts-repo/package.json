@@ -1,0 +1,15 @@
+{
+  "name": "mixed-script-values",
+  "description": "Fixture with valid and malformed package scripts.",
+  "scripts": {
+    "smoke": true,
+    "test": "node --test",
+    "check": {
+      "command": "node check.js"
+    },
+    "build": "node build.js",
+    "lint": null,
+    "start": ["node", "server.js"],
+    "preview": "   "
+  }
+}

@@ -86,3 +86,35 @@ test("uses scripts only when they are a plain object", () => {
     assert.deepEqual(buildVideoBrief(root).demoCommands, [{ label: "test", command: "npm run test" }]);
   });
 });
+
+test("keeps only non-empty string script commands", () => {
+  const facts = inspectRepo("fixtures/malformed-scripts-repo");
+  const brief = buildVideoBrief("fixtures/malformed-scripts-repo");
+
+  assert.deepEqual(facts.scripts, {
+    test: "node --test",
+    build: "node build.js"
+  });
+  assert.equal(facts.hasTests, true);
+  assert.deepEqual(brief.demoCommands, [
+    { label: "test", command: "npm run test" },
+    { label: "build", command: "npm run build" }
+  ]);
+  assert.equal(brief.confidence, 70);
+  assert.doesNotMatch(JSON.stringify(brief), /smoke|check/);
+});
+
+test("malformed script values do not create executable claims", () => {
+  withRepo({ scripts: { smoke: true, test: ["node", "--test"], check: 42, build: "   ", lint: null } }, (root) => {
+    const facts = inspectRepo(root);
+    const brief = buildVideoBrief(root);
+
+    assert.deepEqual(facts.scripts, {});
+    assert.equal(facts.hasTests, false);
+    assert.deepEqual(brief.demoCommands, []);
+    assert.equal(brief.confidence, 55);
+    assert.ok(brief.risks.includes("No package scripts were found, so demo commands may need manual selection."));
+    assert.doesNotMatch(brief.narration, /npm run/);
+    assert.doesNotMatch(JSON.stringify(brief.scenes), /npm run/);
+  });
+});
