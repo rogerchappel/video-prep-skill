@@ -122,3 +122,39 @@ test("malformed script values do not create executable claims", () => {
     assert.doesNotMatch(JSON.stringify(brief.scenes), /npm run/);
   });
 });
+
+test("test detection ignores parent directory names outside the repository", () => {
+  const parent = fs.mkdtempSync(path.join(os.tmpdir(), "video-prep-test-parent-"));
+  const root = path.join(parent, "project-without-suite");
+  fs.mkdirSync(path.join(root, "src"), { recursive: true });
+  fs.writeFileSync(path.join(root, "src", "index.js"), "export const value = 1;\n");
+  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
+    name: "project-without-suite",
+    description: "A repository without automated checks.",
+    scripts: { build: "node --check src/index.js" }
+  }));
+
+  try {
+    const facts = inspectRepo(root);
+    const brief = buildVideoBrief(root);
+
+    assert.equal(facts.hasTests, false);
+    assert.equal(brief.confidence, 65);
+    assert.ok(brief.risks.includes("No clear test signal was found; avoid implying tested behavior."));
+    assert.ok(!brief.evidence.includes("Contains test-related scripts or files."));
+  } finally {
+    fs.rmSync(parent, { recursive: true, force: true });
+  }
+});
+
+test("test detection accepts repository-relative filenames and valid scripts", () => {
+  withRepo({ scripts: { build: "node build.js" } }, (root) => {
+    fs.mkdirSync(path.join(root, "spec"));
+    fs.writeFileSync(path.join(root, "spec", "core.test.js"), "");
+    assert.equal(inspectRepo(root).hasTests, true);
+  });
+
+  withRepo({ scripts: { "test:unit": "node --test" } }, (root) => {
+    assert.equal(inspectRepo(root).hasTests, true);
+  });
+});
