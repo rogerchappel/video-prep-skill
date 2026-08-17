@@ -56,7 +56,8 @@ export function inspectRepo(root) {
     scripts,
     packageKeywords,
     hasSkill: fs.existsSync(path.join(root, "SKILL.md")),
-    hasTests: Object.keys(scripts).some((name) => name.includes("test")) || listFiles(root).some((file) => file.includes("test"))
+    hasTests: Object.keys(scripts).some((name) => name.includes("test"))
+      || listFiles(root).some((file) => path.relative(root, file).includes("test"))
   };
 }
 
