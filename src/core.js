@@ -56,8 +56,8 @@ export function inspectRepo(root) {
     scripts,
     packageKeywords,
     hasSkill: fs.existsSync(path.join(root, "SKILL.md")),
-    hasTests: Object.keys(scripts).some((name) => name.includes("test"))
-      || listFiles(root).some((file) => path.relative(root, file).includes("test"))
+    hasTests: Object.keys(scripts).some(isTestScript)
+      || listFiles(root).some((file) => isTestFile(root, file))
   };
 }
 
@@ -192,6 +192,17 @@ function readFirstExisting(root, names) {
 
 function firstMeaningfulLine(text) {
   return text.split(/\r?\n/).map((line) => line.replace(/^#+\s*/, "").trim()).find(Boolean);
+}
+
+function isTestScript(name) {
+  return /^test(?::|$)/.test(name);
+}
+
+function isTestFile(root, file) {
+  const parts = path.relative(root, file).split(path.sep);
+  const basename = parts.at(-1);
+  return parts.slice(0, -1).some((part) => ["test", "tests", "spec", "specs", "__tests__"].includes(part))
+    || /^(?:test\.[^.]+|.+\.(?:test|spec)\.[^.]+)$/.test(basename);
 }
 
 function listFiles(root) {
