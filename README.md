@@ -29,6 +29,10 @@ object, null, and whitespace-only script values are ignored. Malformed values
 fall back to the repository directory name, README heading, or empty metadata
 defaults instead of stopping the CLI.
 
+Test evidence is reported only for `test` or `test:*` package scripts and
+conventional test/spec filenames or directories. Unrelated names such as
+`latest.js` do not increase confidence or imply that the project is tested.
+
 ## What It Produces
 
 - a positioning summary grounded in README and package metadata

@@ -158,3 +158,30 @@ test("test detection accepts repository-relative filenames and valid scripts", (
     assert.equal(inspectRepo(root).hasTests, true);
   });
 });
+
+test("test detection rejects unrelated test substrings", () => {
+  withRepo({ scripts: { latest: "node latest.js", contest: "node contest.js" } }, (root) => {
+    fs.writeFileSync(path.join(root, "latest.js"), "");
+    fs.mkdirSync(path.join(root, "contest"));
+    fs.writeFileSync(path.join(root, "contest", "helper.js"), "");
+
+    const facts = inspectRepo(root);
+    const brief = buildVideoBrief(root);
+
+    assert.equal(facts.hasTests, false);
+    assert.equal(brief.confidence, 55);
+    assert.ok(brief.risks.includes("No clear test signal was found; avoid implying tested behavior."));
+    assert.ok(!brief.evidence.includes("Contains test-related scripts or files."));
+  });
+});
+
+test("test detection recognizes conventional test and spec paths", () => {
+  for (const file of ["test.js", "core.test.js", "core.spec.mjs", "test/unit.js", "tests/unit.js", "spec/unit.js", "specs/unit.js", "__tests__/unit.js"]) {
+    withRepo({}, (root) => {
+      const target = path.join(root, file);
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.writeFileSync(target, "");
+      assert.equal(inspectRepo(root).hasTests, true, file);
+    });
+  }
+});
