@@ -19,7 +19,7 @@ export function buildVideoBrief(repoPath, options = {}) {
     desiredOutcome: outcome,
     confidence: estimateConfidence(facts, commands),
     summary: summarizeProject(facts),
-    hooks: buildHooks(facts, audience),
+    hooks: buildHooks(facts, commands, audience),
     demoCommands: commands,
     scenes: buildScenes(facts, proofPoints, commands, audience, outcome),
     risks: buildRisks(facts, commands),
@@ -117,11 +117,14 @@ function summarizeProject(facts) {
   return `${facts.name}: ${facts.description}${docs}`;
 }
 
-function buildHooks(facts, audience) {
+function buildHooks(facts, commands, audience) {
+  const opening = commands[0]
+    ? `Open on ${commands[0].command}, then reveal the scenes and proof points it generates.`
+    : "Open on a manual CLI run, then reveal the scenes and proof points it generates.";
   return [
     `Show ${audience} how ${facts.name} moves from repo evidence to a usable video brief.`,
     `Start with the problem: demo videos fail when the script is not grounded in the repository.`,
-    `Open on the smoke command, then reveal the scenes and proof points it generates.`
+    opening
   ];
 }
 
@@ -137,7 +140,7 @@ function buildScenes(facts, proofPoints, commands, audience, outcome) {
 
 function buildRisks(facts, commands) {
   const risks = ["Generated copy is a draft; verify every public claim against repo evidence."];
-  if (!commands.length) risks.push("No package scripts were found, so demo commands may need manual selection.");
+  if (!commands.length) risks.push("No supported smoke, test, check, or build script was found, so use the CLI or select a demo command manually.");
   if (!facts.hasTests) risks.push("No clear test signal was found; avoid implying tested behavior.");
   return risks;
 }

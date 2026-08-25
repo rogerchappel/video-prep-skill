@@ -22,11 +22,15 @@ The skill is read-only. It must not publish video, post to social platforms, edi
 
 ## Workflow
 
-1. Run the smoke command on the fixture repo.
+1. Use the first generated demo command when one is present; otherwise run the CLI manually and inspect its output.
 2. Run the CLI against the target repo.
 3. Check that every claim in the brief maps to repository evidence.
 4. Remove or rewrite weak claims before recording.
 5. Run the target repo's listed verification commands before mentioning them in public copy.
+
+The generated brief names only non-empty `smoke`, `test`, `check`, or `build`
+package scripts found in the target repository. Do not turn an absent or
+malformed script into a command claim; retain the CLI/manual fallback instead.
 
 ## Examples
 

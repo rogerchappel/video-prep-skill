@@ -33,6 +33,11 @@ Test evidence is reported only for `test` or `test:*` package scripts and
 conventional test/spec filenames or directories. Unrelated names such as
 `latest.js` do not increase confidence or imply that the project is tested.
 
+Generated demo commands and command-specific hooks are likewise evidence-bound:
+only normalized `smoke`, `test`, `check`, or `build` scripts are named, in that
+priority order. When none exists, hooks and scenes direct the presenter to run
+the CLI or choose a command manually instead of inventing a package script.
+
 ## What It Produces
 
 - a positioning summary grounded in README and package metadata

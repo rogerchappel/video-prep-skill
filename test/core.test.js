@@ -31,6 +31,7 @@ test("builds a grounded brief", () => {
   assert.equal(brief.audience, "maintainers");
   assert.ok(brief.hooks.some((hook) => hook.includes("sample-agent-tool")));
   assert.ok(brief.demoCommands.some((command) => command.command === "npm run smoke"));
+  assert.ok(brief.hooks.includes("Open on npm run smoke, then reveal the scenes and proof points it generates."));
   assert.ok(brief.evidence.some((item) => item.includes("SKILL.md")));
   assert.equal(brief.confidence, 100);
 });
@@ -117,9 +118,34 @@ test("malformed script values do not create executable claims", () => {
     assert.equal(facts.hasTests, false);
     assert.deepEqual(brief.demoCommands, []);
     assert.equal(brief.confidence, 55);
-    assert.ok(brief.risks.includes("No package scripts were found, so demo commands may need manual selection."));
+    assert.ok(brief.risks.includes("No supported smoke, test, check, or build script was found, so use the CLI or select a demo command manually."));
     assert.doesNotMatch(brief.narration, /npm run/);
     assert.doesNotMatch(JSON.stringify(brief.scenes), /npm run/);
+    assert.doesNotMatch(JSON.stringify(brief.hooks), /(?:smoke|test|check|build) command|npm run/);
+    assert.match(brief.hooks.at(-1), /manual CLI run/);
+  });
+});
+
+test("grounds hook commands in supported package scripts", () => {
+  for (const name of ["test", "check", "build"]) {
+    withRepo({ scripts: { lint: "eslint .", [name]: `node ${name}.js` } }, (root) => {
+      const brief = buildVideoBrief(root);
+      assert.deepEqual(brief.demoCommands, [{ label: name, command: `npm run ${name}` }]);
+      assert.equal(brief.hooks.at(-1), `Open on npm run ${name}, then reveal the scenes and proof points it generates.`);
+      assert.match(renderBrief(brief, "text"), new RegExp(`Open on npm run ${name}`));
+      assert.match(JSON.parse(renderBrief(brief, "json")).hooks.at(-1), new RegExp(`Open on npm run ${name}`));
+      assert.doesNotMatch(JSON.stringify(brief), /smoke command/);
+    });
+  }
+
+  withRepo({ scripts: { lint: "eslint ." } }, (root) => {
+    const brief = buildVideoBrief(root);
+    assert.deepEqual(brief.demoCommands, []);
+    assert.match(brief.hooks.at(-1), /manual CLI run/);
+    for (const output of [renderBrief(brief, "text"), renderBrief(brief, "json")]) {
+      assert.match(output, /manual CLI run/);
+      assert.doesNotMatch(output, /(?:smoke|test|check|build) command|npm run/);
+    }
   });
 });
 
