@@ -73,11 +73,13 @@ test("renders representative text and JSON commands", () => {
   assert.equal(textResult.status, 0);
   assert.match(textResult.stdout, /Video Prep Brief/);
   assert.match(textResult.stdout, /Audience: maintainers/);
+  assert.match(textResult.stdout, /Open on npm run smoke/);
   assert.equal(textResult.stderr, "");
 
   const jsonResult = runCli([fixture, "--format", "json"]);
   assert.equal(jsonResult.status, 0);
   assert.equal(JSON.parse(jsonResult.stdout).project, "sample-agent-tool");
+  assert.match(JSON.parse(jsonResult.stdout).hooks.at(-1), /Open on npm run smoke/);
   assert.equal(jsonResult.stderr, "");
 });
 
@@ -116,4 +118,5 @@ test("omits malformed script values from CLI output", () => {
     { label: "build", command: "npm run build" }
   ]);
   assert.doesNotMatch(result.stdout, /npm run (smoke|check)/);
+  assert.equal(brief.hooks.at(-1), "Open on npm run test, then reveal the scenes and proof points it generates.");
 });
