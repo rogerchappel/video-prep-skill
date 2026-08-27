@@ -3,10 +3,57 @@
   "audience": "agent builders",
   "desiredOutcome": "try the project locally",
   "confidence": 100,
+  "summary": "sample-agent-tool: A tiny local-first tool that turns agent notes into launch checklists. It includes docs such as docs/usage.md.",
+  "hooks": [
+    "Show agent builders how sample-agent-tool moves from repo evidence to a usable video brief.",
+    "Start with the problem: demo videos fail when the script is not grounded in the repository.",
+    "Open on npm run smoke, then reveal the scenes and proof points it generates."
+  ],
   "demoCommands": [
     {
       "label": "smoke",
       "command": "npm run smoke"
+    },
+    {
+      "label": "test",
+      "command": "npm run test"
+    },
+    {
+      "label": "check",
+      "command": "npm run check"
     }
+  ],
+  "scenes": [
+    {
+      "title": "Problem",
+      "beat": "Frame why agent builders need grounded video prep instead of generic launch copy."
+    },
+    {
+      "title": "Evidence",
+      "beat": "Show the repo files that support the claim: Description: A tiny local-first tool that turns agent notes into launch checklists."
+    },
+    {
+      "title": "Demo",
+      "beat": "Run npm run smoke and show the generated brief."
+    },
+    {
+      "title": "Workflow",
+      "beat": "Point out hooks, scene beats, risks, and verification notes."
+    },
+    {
+      "title": "Close",
+      "beat": "Ask viewers to try the project locally and verify claims before publishing."
+    }
+  ],
+  "risks": [
+    "Generated copy is a draft; verify every public claim against repo evidence."
+  ],
+  "narration": "This is sample-agent-tool, a project for agent builders. The useful thing is not just the script it writes, but the evidence it keeps attached: Description: A tiny local-first tool that turns agent notes into launch checklists. I can run npm run smoke to prove the workflow locally. The final pass is a practical checklist: hook, scenes, demo proof, risks, and the next action, which is to try the project locally.",
+  "evidence": [
+    "Description: A tiny local-first tool that turns agent notes into launch checklists.",
+    "Keywords: agents, launch, checklist",
+    "Includes SKILL.md instructions for agent use.",
+    "Docs present: docs/usage.md",
+    "Contains test-related scripts or files."
   ]
 }
