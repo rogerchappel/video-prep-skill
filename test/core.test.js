@@ -42,6 +42,13 @@ test("renders text and json formats", () => {
   assert.equal(JSON.parse(renderBrief(brief, "json")).project, "sample-agent-tool");
 });
 
+test("keeps the retained sample brief synchronized with the bundled fixture", () => {
+  const retained = fs.readFileSync("examples/sample-brief.json", "utf8");
+  const generated = renderBrief(buildVideoBrief("fixtures/sample-repo"), "json");
+
+  assert.equal(retained, generated);
+});
+
 test("uses only non-empty string package names and descriptions", () => {
   for (const value of [null, {}, [], ""]) {
     withRepo({ name: value, description: value }, (root) => {
