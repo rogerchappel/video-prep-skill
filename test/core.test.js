@@ -36,6 +36,15 @@ test("builds a grounded brief", () => {
   assert.equal(brief.confidence, 100);
 });
 
+test("uses meaningful README prose instead of title and navigation chrome", () => {
+  const brief = buildVideoBrief("fixtures/readme-fallback-repo");
+
+  assert.equal(brief.summary, "readme-fallback-repo: A grounded widget.");
+  assert.ok(brief.evidence.includes("Description: A grounded widget."));
+  assert.match(brief.narration, /Description: A grounded widget\./);
+  assert.doesNotMatch(JSON.stringify(brief), /Description: Widget/);
+});
+
 test("renders text and json formats", () => {
   const brief = buildVideoBrief("fixtures/sample-repo");
   assert.match(renderBrief(brief, "text"), /Video Prep Brief/);
