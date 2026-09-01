@@ -63,7 +63,7 @@ test("uses only non-empty string package names and descriptions", () => {
     withRepo({ name: value, description: value }, (root) => {
       const facts = inspectRepo(root);
       assert.equal(facts.name, path.basename(root));
-      assert.equal(facts.description, "README fallback");
+      assert.equal(facts.description, "Grounded description.");
     });
   }
 
@@ -72,6 +72,12 @@ test("uses only non-empty string package names and descriptions", () => {
     assert.equal(facts.name, "valid-name");
     assert.equal(facts.description, "Valid description");
   });
+});
+
+test("retains a safe title fallback for sparse READMEs", () => {
+  withRepo({}, (root) => {
+    assert.equal(inspectRepo(root).description, "Sparse project");
+  }, "# Sparse project\n\n[![CI](https://img.shields.io/badge/ci-passing-green)](https://example.test)\n");
 });
 
 test("normalizes keywords to an array containing only strings", () => {

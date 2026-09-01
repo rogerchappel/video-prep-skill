@@ -194,7 +194,21 @@ function readFirstExisting(root, names) {
 }
 
 function firstMeaningfulLine(text) {
-  return text.split(/\r?\n/).map((line) => line.replace(/^#+\s*/, "").trim()).find(Boolean);
+  const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const prose = lines.find((line) => !isReadmeChrome(line));
+  if (prose) return prose;
+
+  return lines.map((line) => line.replace(/^#{1,6}\s+/, "").trim()).find(Boolean);
+}
+
+function isReadmeChrome(line) {
+  if (/^#{1,6}(?:\s+|$)/.test(line)) return true;
+  if (/^!\[[^\]]*\]\([^)]*\)(?:\s+.*)?$/.test(line)) return true;
+  if (/^\[!\[[^\]]*\]\([^)]*\)\]\([^)]*\)(?:\s+.*)?$/.test(line)) return true;
+  if (/<img\b/i.test(line)) return true;
+
+  const withoutLinks = line.replace(/\[[^\]]+\]\([^)]*\)/g, "");
+  return /^(?:\s*[|·•:/\\-]\s*)*$/.test(withoutLinks);
 }
 
 function isTestScript(name) {

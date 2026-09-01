@@ -111,7 +111,7 @@ test("renders a grounded brief when package metadata has malformed field types",
     assert.equal(result.stderr, "");
     const brief = JSON.parse(result.stdout);
     assert.equal(brief.project, path.basename(root));
-    assert.equal(brief.summary, `${path.basename(root)}: Readable repository`);
+    assert.equal(brief.summary, `${path.basename(root)}: Repository details.`);
     assert.deepEqual(brief.demoCommands, []);
     assert.doesNotMatch(result.stdout, /\[object Object\]/);
   } finally {
