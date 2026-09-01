@@ -83,6 +83,18 @@ test("renders representative text and JSON commands", () => {
   assert.equal(jsonResult.stderr, "");
 });
 
+test("renders meaningful README prose through the CLI fallback", () => {
+  const result = runCli(["fixtures/readme-fallback-repo", "--format", "json"]);
+
+  assert.equal(result.status, 0);
+  assert.equal(result.stderr, "");
+  const brief = JSON.parse(result.stdout);
+  assert.equal(brief.summary, "readme-fallback-repo: A grounded widget.");
+  assert.ok(brief.evidence.includes("Description: A grounded widget."));
+  assert.match(brief.narration, /Description: A grounded widget\./);
+  assert.doesNotMatch(result.stdout, /Description: Widget/);
+});
+
 test("renders a grounded brief when package metadata has malformed field types", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "video-prep-cli-"));
   fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({
