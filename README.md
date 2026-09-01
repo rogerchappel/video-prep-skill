@@ -26,8 +26,10 @@ Package metadata is treated as optional evidence. The scanner uses `name` and
 an array (discarding non-string entries), and `scripts` only when it is an
 object map containing non-empty string commands. Boolean, numeric, array,
 object, null, and whitespace-only script values are ignored. Malformed values
-fall back to the repository directory name, README heading, or empty metadata
-defaults instead of stopping the CLI.
+fall back to the repository directory name, meaningful README prose, or empty
+metadata defaults instead of stopping the CLI. README fallback skips title
+headings and common badge, image, and link-only navigation lines; for a sparse
+README with no prose, the first non-empty line remains a safe last resort.
 
 Test evidence is reported only for `test` or `test:*` package scripts and
 conventional test/spec filenames or directories. Unrelated names such as
