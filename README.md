@@ -5,7 +5,7 @@
 ## Quickstart
 
 ```bash
-npm install
+npm ci
 npm run smoke
 node bin/video-prep-skill.js ./fixtures/sample-repo --format json
 ```
@@ -61,6 +61,12 @@ The CLI only reads local files. It does not call external services, mutate the t
 - The narration is deterministic template output, not model-generated prose.
 
 ## Verification
+
+Install the committed dependency graph before development or verification:
+
+```bash
+npm ci
+```
 
 ```bash
 npm run check
