@@ -70,6 +70,7 @@ npm ci
 
 ```bash
 npm run check
+npm run tasks:status-check
 npm test
 npm run smoke
 npm run package:smoke
@@ -79,6 +80,9 @@ npm run release:check
 Use `npm run package:smoke` to assert the npm tarball contains the CLI,
 library, docs, skill instructions, support files, and sample brief before
 publishing.
+Use `npm run tasks:status-check` to verify `docs/TASKS.md` still matches
+implemented capabilities; shipped work belongs under `Done` with evidence
+links and only unimplemented work under `Next`.
 When the bundled sample fixture changes, refresh its retained JSON output with
 `node bin/video-prep-skill.js fixtures/sample-repo --format json > examples/sample-brief.json`;
 the test suite verifies that the example stays synchronized.

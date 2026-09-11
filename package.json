@@ -8,10 +8,11 @@
   },
   "scripts": {
     "check": "node --check src/core.js && node --check bin/video-prep-skill.js",
+    "tasks:status-check": "node scripts/check-task-status.mjs",
     "test": "node --test",
     "smoke": "node bin/video-prep-skill.js fixtures/sample-repo --format text",
     "package:smoke": "node scripts/package-smoke.js",
-    "release:check": "npm run check && npm test && npm run smoke && npm run package:smoke"
+    "release:check": "npm run check && npm run tasks:status-check && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "agent-skill",
