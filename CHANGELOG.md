@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- Record the shipped confidence scoring under `Done` in `docs/TASKS.md` with
+  evidence links and add a `tasks:status-check` documentation guard, wired into
+  `npm run release:check`, that fails when implemented behavior is listed as
+  pending or evidence links go stale, mirroring the sibling guards in typoscope
+  and unuseddeps.
 - Reject missing option values and unknown CLI options with concise usage
   diagnostics instead of silently falling back or printing a stack trace.
 - Include the sample brief examples in the npm package allowlist.
