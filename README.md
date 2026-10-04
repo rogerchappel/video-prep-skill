@@ -87,3 +87,8 @@ When the bundled sample fixture changes, refresh its retained JSON output with
 `node bin/video-prep-skill.js fixtures/sample-repo --format json > examples/sample-brief.json`;
 the test suite verifies that the example stays synchronized.
 Use `npm run release:check` before opening a release PR.
+
+
+### Read-only Git log summary
+
+Use `--git-log <range>` to print up to 20 commit subjects from an explicit Git revision range (for example `HEAD~3..HEAD`). This mode runs local `git log` only, performs no network access, and does not modify the repository. It is an alternative output mode; without the option, the normal brief output is unchanged.

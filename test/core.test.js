@@ -233,3 +233,10 @@ test("test detection recognizes conventional test and spec paths", () => {
     });
   }
 });
+
+
+test("summarizes only the explicitly requested local git range", async () => {
+  const { summarizeGitLog } = await import("../src/core.js");
+  assert.match(summarizeGitLog(process.cwd(), "HEAD~1..HEAD"), /^# Git log summary \(HEAD~1..HEAD\)/);
+  assert.throws(() => summarizeGitLog(process.cwd(), "--all"), /explicit revision range/);
+});

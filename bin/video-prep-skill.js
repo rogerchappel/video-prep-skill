@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { buildVideoBrief, renderBrief } from "../src/core.js";
+import { buildVideoBrief, renderBrief, summarizeGitLog } from "../src/core.js";
 
 const args = process.argv.slice(2);
-const usage = "Usage: video-prep-skill <repo-path> [--format text|json] [--audience value] [--outcome value]";
+const usage = "Usage: video-prep-skill <repo-path> [--format text|json] [--audience value] [--outcome value] [--git-log <range>]";
 
 if (args.includes("--help") || args.length === 0) {
   console.log(usage);
@@ -21,8 +21,12 @@ try {
 }
 
 try {
-  const brief = buildVideoBrief(repoPath, options);
-  process.stdout.write(renderBrief(brief, options.format || "text"));
+  if (options["git-log"]) {
+    process.stdout.write(`${summarizeGitLog(repoPath, options["git-log"])}\n`);
+  } else {
+    const brief = buildVideoBrief(repoPath, options);
+    process.stdout.write(renderBrief(brief, options.format || "text"));
+  }
 } catch (error) {
   console.error(`video-prep-skill: ${error.message}`);
   process.exit(1);
@@ -32,7 +36,7 @@ function parseOptions(tokens) {
   const options = {};
   for (let index = 0; index < tokens.length; index += 1) {
     const token = tokens[index];
-    if (["--format", "--audience", "--outcome"].includes(token)) {
+    if (["--format", "--audience", "--outcome", "--git-log"].includes(token)) {
       const value = tokens[index + 1];
       if (value === undefined || value.startsWith("--")) {
         throw new Error(`${token} requires a value`);
