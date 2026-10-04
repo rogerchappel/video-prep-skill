@@ -7,7 +7,7 @@ import path from "node:path";
 
 const cli = "bin/video-prep-skill.js";
 const fixture = "fixtures/sample-repo";
-const usage = "Usage: video-prep-skill <repo-path> [--format text|json] [--audience value] [--outcome value]";
+const usage = "Usage: video-prep-skill <repo-path> [--format text|json] [--audience value] [--outcome value] [--git-log <range>]";
 
 function runCli(args) {
   return spawnSync(process.execPath, [cli, ...args], {
@@ -131,4 +131,11 @@ test("omits malformed script values from CLI output", () => {
   ]);
   assert.doesNotMatch(result.stdout, /npm run (smoke|check)/);
   assert.equal(brief.hooks.at(-1), "Open on npm run test, then reveal the scenes and proof points it generates.");
+});
+
+test("prints a bounded local git log summary", () => {
+  const result = runCli([".", "--git-log", "HEAD~1..HEAD"]);
+  assert.equal(result.status, 0);
+  assert.match(result.stdout, /^# Git log summary \(HEAD~1..HEAD\)/);
+  assert.equal(result.stderr, "");
 });

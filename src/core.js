@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -231,4 +232,21 @@ function listFiles(root) {
     if (entry.isDirectory()) return listFiles(fullPath);
     return [fullPath];
   });
+}
+
+/** Return a bounded, read-only summary of commits in an explicit Git revision range. */
+export function summarizeGitLog(repoPath, range) {
+  if (typeof range !== "string" || !range.trim() || range.startsWith("-") || range.length > 200) {
+    throw new Error("--git-log requires a valid explicit revision range");
+  }
+  const root = path.resolve(repoPath);
+  const stat = fs.statSync(root);
+  if (!stat.isDirectory()) throw new Error(`Repository path is not a directory: ${root}`);
+  const format = "%h%x09%s";
+  const output = execFileSync("git", ["-C", root, "log", "--no-decorate", `--format=${format}`, "-n", "20", range], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  const commits = output.trimEnd().split("\n").filter(Boolean).map((line) => {
+    const [hash, ...subject] = line.split("\t");
+    return `- ${hash} ${subject.join(" ")}`;
+  });
+  return [`# Git log summary (${range})`, "", ...(commits.length ? commits : ["No commits in range."])].join("\n");
 }
