@@ -162,10 +162,18 @@ function buildNarration(facts, proofPoints, commands, audience, outcome) {
 }
 
 function readJson(file) {
+  let contents;
   try {
-    return JSON.parse(fs.readFileSync(file, "utf8"));
-  } catch {
-    return null;
+    contents = fs.readFileSync(file, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw new Error(`Unable to read package metadata at ${file}: ${error.message}`, { cause: error });
+  }
+
+  try {
+    return JSON.parse(contents);
+  } catch (error) {
+    throw new Error(`Invalid package metadata at ${file}: ${error.message}`, { cause: error });
   }
 }
 
