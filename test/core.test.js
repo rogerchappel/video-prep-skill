@@ -74,6 +74,30 @@ test("uses only non-empty string package names and descriptions", () => {
   });
 });
 
+test("rejects malformed package metadata instead of presenting fallback facts", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "video-prep-invalid-package-"));
+  fs.writeFileSync(path.join(root, "package.json"), '{ "name": ');
+  try {
+    assert.throws(() => inspectRepo(root), /Invalid package metadata at .*package\.json/);
+    assert.throws(() => buildVideoBrief(root), /Invalid package metadata at .*package\.json/);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("allows package metadata to be absent", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "video-prep-no-package-"));
+  try {
+    fs.writeFileSync(path.join(root, "README.md"), "# Readme-only project\n\nA project without package metadata.");
+    const facts = inspectRepo(root);
+    assert.equal(facts.name, path.basename(root));
+    assert.equal(facts.description, "A project without package metadata.");
+    assert.deepEqual(facts.scripts, {});
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("retains a safe title fallback for sparse READMEs", () => {
   withRepo({}, (root) => {
     assert.equal(inspectRepo(root).description, "Sparse project");
