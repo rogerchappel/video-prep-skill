@@ -16,5 +16,4 @@
 
 ## Next
 
-- Add optional git log summarization (implemented as `--git-log <range>`; see README).
 - Add markdown frontmatter output.
