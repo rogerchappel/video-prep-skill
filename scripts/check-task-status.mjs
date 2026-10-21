@@ -25,7 +25,7 @@ const pendingSection = taskStatus
   .slice(nextStart, nextEnd === -1 ? undefined : nextEnd)
   .toLowerCase();
 
-const staleClaims = ["confidence scoring"];
+const staleClaims = ["confidence scoring", "git log summarization", "--git-log"];
 
 for (const claim of staleClaims) {
   if (pendingSection.includes(claim)) {

@@ -46,6 +46,19 @@ test("checker fails when implemented confidence scoring returns to Next", async 
   );
 });
 
+test("checker fails when implemented git log summarization returns to Next", async () => {
+  const stale = committedTasks.replace(
+    "## Next\n\n",
+    "## Next\n\n- Add optional git log summarization via `--git-log <range>`.\n",
+  );
+  assert.notEqual(stale, committedTasks, "fixture must exercise the stale pending claim");
+  const root = await sandbox(stale);
+  assert.throws(
+    () => runChecker(root),
+    /docs\/TASKS\.md describes implemented behavior as pending: git log summarization/,
+  );
+});
+
 test("checker fails when a Done evidence link is removed", async () => {
   const linkStart = committedTasks.indexOf(" ([src/core.js]");
   const linkEnd = committedTasks.indexOf(")).", linkStart);
